@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Development Playground</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #312c54;
+      --primary-light: #3aad85;
+      --secondary: #00b894;
+      --accent: #e9147b;
+      --dark: #2d3436;
+      --light: #8596dd;
+      --yellow: #fdcb6e;
+      --orange: #e17055;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      min-height: 100vh;
+      padding: 2rem;
+      animation: gradientShift 15s ease infinite;
+      background-size: 300% 300%;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to right, var(--primary-light), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      display: inline-block;
+    }
+
+    .header h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      border-radius: 2px;
+    }
+
+    .header p {
+      color: rgba(210, 179, 179, 0.7);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .projects-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .project {
+      background: rgba(202, 39, 39, 0.08);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .project:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .project-header {
+      padding: 1.2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    .project-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+    }
+
+    .project-number {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 30px;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    .project-title {
+      font-size: 1.3rem;
+      display: inline;
+      font-weight: 600;
+    }
+
+    .project-content {
+      padding: 1.5rem;
+    }
+
+    /* Color Picker Styles */
+    .color-picker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .color-display {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: var(--primary);
+      margin: 1rem 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      border: 5px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .color-display:hover {
+      transform: scale(1.05);
+    }
+
+    /* Star Rating Styles */
+    .rating-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stars-container {
+      display: flex;
+      margin: 1rem 0;
+    }
+
+    .star {
+      font-size: 2.2rem;
+      color: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin: 0 5px;
+    }
+
+    .star:hover, .star.active {
+      color: var(--yellow);
+      transform: scale(1.1);
+    }
+
+    .rating-value {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Circuit Styles */
+    .circuit-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .circuit-svg {
+      width: 100%;
+      max-width: 300px;
+      margin: 1rem 0;
+    }
+
+    /* Calculator Styles */
+    .calculator {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      padding: 1.2rem;
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    .calculator-display {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      text-align: right;
+      font-size: 1.8rem;
+      font-family: 'Courier New', monospace;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      overflow: hidden;
+    }
+
+    .calculator-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.6rem;
+    }
+
+    .calc-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem;
+      font-size: 1.2rem;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .calc-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .calc-btn.operator {
+      background: rgba(108, 92, 231, 0.5);
+    }
+
+    .calc-btn.operator:hover {
+      background: rgba(108, 92, 231, 0.7);
+    }
+
+    .calc-btn.equals {
+      background: rgba(0, 184, 148, 0.5);
+    }
+
+    .calc-btn.equals:hover {
+      background: rgba(0, 184, 148, 0.7);
+    }
+
+    .calc-btn.clear {
+      background: rgba(232, 67, 147, 0.5);
+    }
+
+    .calc-btn.clear:hover {
+      background: rgba(232, 67, 147, 0.7);
+    }
+
+    /* Button Styles */
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn.secondary {
+      background: linear-gradient(135deg, var(--secondary), #55efc4);
+    }
+
+    .btn.accent {
+      background: linear-gradient(135deg, var(--accent), #fd79a8);
+    }
+
+    /* Input Styles */
+    .input-field {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.3);
+    }
+
+    /* Result Display */
+    .result-display {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    /* Clock Styles */
+    .clock-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .clock-display {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1.5rem;
+      border-radius: 12px;
+      width: 100%;
+      text-align: center;
+      margin: 1rem 0;
+    }
+
+    .time {
+      font-size: 2.2rem;
+      font-weight: 700;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 0.5rem;
+    }
+
+    .date {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Journal & Notes Styles */
+    .entry-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin: 1rem 0;
+      padding-right: 0.5rem;
+    }
+
+    .entry-item {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .entry-date {
+      font-size: 0.85rem;
+      color: var(--yellow);
+      margin-bottom: 0.3rem;
+    }
+
+    .entry-content {
+      font-size: 0.95rem;
+    }
+
+    .note-title {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .delete-btn {
+      background: rgba(232, 67, 147, 0.3);
+      border: none;
+      color: white;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: absolute;
+      top: 0.8rem;
+      right: 0.8rem;
+    }
+
+    .delete-btn:hover {
+      background: rgba(232, 67, 147, 0.7);
+    }
+
+    /* Quote Styles */
+    .quote-container {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .quote-text {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      position: relative;
+      font-style: italic;
+    }
+
+    .quote-text::before,
+    .quote-text::after {
+      content: '"';
+      font-size: 1.5rem;
+      color: var(--primary-light);
+      opacity: 0.7;
+    }
+
+    .quote-author {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Password Strength Styles */
+    .strength-meter {
+      height: 6px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+      margin: 0.5rem 0;
+      overflow: hidden;
+    }
+
+    .strength-bar {
+      height: 100%;
+      width: 0;
+      transition: all 0.3s ease;
+    }
+
+    .strength-text {
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    /* Todo Styles */
+    .todo-input-container {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .todo-input {
+      flex: 1;
+    }
+
+    .add-todo-btn {
+      width: 45px;
+      height: 45px;
+      border-radius: 8px;
+      background: var(--secondary);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .add-todo-btn:hover {
+      background: #00a884;
+    }
+
+    .todo-filters {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .filter-btn {
+      flex: 1;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.85rem;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+    }
+
+    .todos-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.8rem;
+      border-radius: 8px;
+      margin-bottom: 0.6rem;
+    }
+
+    .todo-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .todo-text {
+      flex: 1;
+      word-break: break-word;
+    }
+
+    .todo-text.completed {
+      text-decoration: line-through;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .delete-todo {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: rgba(232, 67, 147, 0.3);
+      border: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .delete-todo:hover {
+      background: rgba(232, 67, 147, 0.7);
+    }
+
+    /* Weather Widget Styles */
+    .weather-search {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-btn {
+      width: 45px;
+      height: 45px;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .search-btn:hover {
+      background: #5a4bc9;
+    }
+
+    .weather-info {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      padding: 1.2rem;
+      min-height: 180px;
+    }
+
+    .weather-location {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .location-name {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .unit-toggle {
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+    }
+
+    .unit-toggle:hover {
+      color: white;
+    }
+
+    .weather-main {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .weather-icon {
+      font-size: 2.5rem;
+      color: var(--yellow);
+      margin-right: 1rem;
+    }
+
+    .weather-temp {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .weather-condition {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
+    }
+
+    .weather-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .weather-detail {
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+
+    .detail-icon {
+      margin-right: 0.5rem;
+      color: var(--primary-light);
+    }
+
+    .weather-error {
+      background: rgba(232, 67, 147, 0.3);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .weather-loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 180px;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .projects-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .header h1 {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Web Development Playground</h1>
+    <p>A collection of interactive web projects demonstrating various JavaScript functionalities and techniques.</p>
+  </div>
+
+  <div class="projects-container">
+    <!-- Project 1: Color Picker -->
+    <div class="project">
+      <div class="project-header">
+        <span class="project-number">1</span>
+        <h2 class="project-title">Choose color</h2>
+      </div>
+      <div class="project-content">
+        <div class="color-picker">
+          <div class="color-display" id="colorDisplay"></div>
+          <p class="description">Click the circle to change its color randomly</p>
+          <button class="btn" id="resetColorBtn">Reset Color</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2: Star Rating -->
+    <div class="project">
+      <div class="project-header">
+        <span class="project-number">2</span>
+        <h2 class="project-title">Star Rating</h2>
+      </div>
+      <div class="project-content">
+        <div class="rating-container">
+          <div class="stars-container" id="starsContainer">
+            <i class="fas fa-star star" data-value="1"></i>
+            <i class="fas fa-star star" data-value="2"></i>
+            <i class="fas fa-star star" data-value="3"></i>
+            <i class="fas fa-star star" data-value="4"></i>
+            <i class="fas fa-star star" data-value="5"></i>
+          </div>
+          <div class="rating-value">Rating: <span id="ratingValue">0</span>/5</div>
+          <button class="btn" id="resetRatingBtn">Reset Rating</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 3: Circuit Switch -->
+    <div class="project">
+      <div class="project-header">
+        <span class="project-number">3</span>
+        <h2 class="project-title">Bulb switch</h2>
+      </div>
+      <div class="project-content">
+        <div class="circuit-container">
+          <svg class="circuit-svg" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="280" height="180" rx="10" fill="#2d3436" stroke="#a29bfe" stroke-width="2"/>
+            <path id="wirePath" d="M50,100 L120,100 L120,50 L200,50 L200,100 L250,100" 
+                stroke="#e17055" stroke-width="4" fill="none"/>
+            <rect x="20" y="80" width="30" height="40" rx="2" fill="#636e72"/>
+            <text x="35" y="110" text-anchor="middle" fill="white" font-size="12">PWR</text>
+          
+            <circle id="switchBase" cx="120" cy="100" r="15" fill="#b2bec3"/>
+            <rect id="switchHandle" x="105" y="97" width="30" height="6" rx="2" fill="#e84393"/>
+            
+            <circle id="bulb" cx="250" cy="100" r="20" fill="#636e72"/>
+            <path id="filament" d="M240,100 Q250,85 260,100" stroke="#fdcb6e" stroke-width="0" fill="none"/>
+            
+            <circle id="bulbGlow" cx="250" cy="100" r="30" fill="url(#glowGradient)" opacity="0"/>
+            
+            <defs>
+              <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                <stop offset="0%" stop-color="#fdcb6e" stop-opacity="0.8"/>
+                <stop offset="100%" stop-color="#fdcb6e" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+          </svg>
+          <p class="description">Click the switch to toggle the light bulb</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 4: Calculator -->
+    <div class="project">
+      <div class="project-header">
+        <span class="project-number">4</span>
+        <h2 class="project-title">Calculator</h2>
+      </div>
+      <div class="project-content">
+        <div class="calculator">
+          <div class="calculator-display" id="calcDisplay">0</div>
+          <div class="calculator-buttons">
+            <button class="calc-btn clear" data-action="clear">C</button>
+            <button class="calc-btn" data-value="(">(</button>
+            <button class="calc-btn" data-value=")">)</button>
+            <button class="calc-btn operator" data-value="/">÷</button>
+            
+            <button class="calc-btn" data-value="7">7</button>
+            <button class="calc-btn" data-value="8">8</button>
+            <button class="calc-btn" data-value="9">9</button>
+            <button class="calc-btn operator" data-value="*">×</button>
+            
+            <button class="calc-btn" data-value="4">4</button>
+            <button class="calc-btn" data-value="5">5</button>
+            <button class="calc-btn" data-value="6">6</button>
+            <button class="calc-btn operator" data-value="-">-</button>
+            
+            <button class="calc-btn" data-value="1">1</button>
+            <button class="calc-btn" data-value="2">2</button>
+            <button class="calc-btn" data-value="3">3</button>
+            <button class="calc-btn operator" data-value="+">+</button>
+            
+            <button class="calc-btn" data-value="0">0</button>
+            <button class="calc-btn" data-value=".">.</button>
+            <button class="calc-btn" data-action="backspace">⌫</button>
+            <button class="calc-btn equals" data-action="calculate">=</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 5: Type Detector -->
+    <div class="project">
+      <div class="project-header">
+        <span class="project-number">5</span>
+        <h2 class="project-title">Search Type</h2>
+      </div>
+      <div class="project-content">
+        <input type="text" class="input-field" id="typeInput" placeholder="Enter any value...">
+        <button class="btn" id="checkTypeBtn">Check Type</button>
+        <div class="result-display" id="typeResult">Type will appear here</div>
+        <p class="examples">Try: "hello", 42, true, [1,2], {name:"John"}</p>
+      </div>
+    </div>
+
+    <!-- Project 6: Digital Clock -->
+    <div class="project">
+      <div class="project-header">
+        <span class="project-number">6</span>
+        <h2 class="project-title">Digital Clock</h2>
+      </div>
+      <div class="project-content">
+        <div class="clock-container">
+          <div class="clock-display">
+            <div class="time" id="clockTime">00:00:00</div>
+            <div class="date" id="clockDate">Monday, Jan 1, 2023</div>
+          </div>
+          <button class="btn" id="toggleFormatBtn">Toggle 12/24</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 7: Daily Journal -->
+    <div class="project">
+      <div class="project-header">
+        <span class="project-number">7</span>
+        <h2 class="project-title">Thoughts</h2>
+      </div>
+      <div class="project-content">
+        <textarea class="input-field" id="journalEntry" placeholder="Write your thoughts..."></textarea>
+        <button class="btn secondary" id="saveJournalBtn">Save Entry</button>
+        <div class="entry-list" id="journalEntries">
+          <!-- Entries will appear here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 8: Notes App -->
+    <div class="project">
+      <div class="project-header">
+        <span class="project-number">8</span>
+        <h2 class="project-title">Short Notes</h2>
+      </div>
+      <div class="project-content">
+        <input type="text" class="input-field" id="noteTitleInput" placeholder="Note title...">
+        <textarea class="input-field" id="noteContentInput" placeholder="Note content..."></textarea>
+        <button class="btn secondary" id="saveNoteBtn">Save Note</button>
+        <div class="entry-list" id="notesList">
+          <!-- Notes will appear here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 9: Quote Machine -->
+    <div class="project">
+      <div class="project-header">
+        <span class="project-number">9</span>
+        <h2 class="project-title">Daily Quote</h2>
+      </div>
+      <div class="project-content">
+        <div class="quote-container">
+          <p class="quote-text" id="quoteText">"The only way to do great work is to love what you do."</p>
+          <p class="quote-author" id="quoteAuthor">- Steve Jobs</p>
+        </div>
+        <button class="btn" id="newQuoteBtn">New Quote</button>
+      </div>
+    </div>
+
+    <!-- Project 10: Password Checker -->
+    <div class="project">
+      <div class="project-header">
+        <span class="project-number">10</span>
+        <h2 class="project-title">Password Checker</h2>
+      </div>
+      <div class="project-content">
+        <input type="password" class="input-field" id="passwordInput" placeholder="Enter a password...">
+        <div class="strength-meter">
+          <div class="strength-bar" id="strengthBar"></div>
+        </div>
+        <div class="strength-text" id="strengthText">Password strength will appear here</div>
+        <div class="password-tips">
+          <p>Tips for a strong password:</p>
+          <ul>
+            <li>At least 8 characters</li>
+            <li>Mix of uppercase & lowercase</li>
+            <li>Include numbers</li>
+            <li>Include special characters</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 11: Todo List -->
+    <div class="project">
+      <div class="project-header">
+        <span class="project-number">11</span>
+        <h2 class="project-title">Task Manager</h2>
+      </div>
+      <div class="project-content">
+        <div class="todo-input-container">
+          <input type="text" class="input-field todo-input" id="todoInput" placeholder="Add a new task...">
+          <button class="add-todo-btn" id="addTodoBtn"><i class="fas fa-plus"></i></button>
+        </div>
+        <div class="todo-filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="active">Active</button>
+          <button class="filter-btn" data-filter="completed">Completed</button>
+        </div>
+        <div class="todos-list" id="todosList">
+          <!-- Todos will appear here -->
+        </div>
+        <button class="btn accent" id="clearCompletedBtn">Clear Completed</button>
+      </div>
+    </div>
+
+    <!-- Project 12: Weather App -->
+    <div class="project">
+      <div class="project-header">
+        <span class="project-number">12</span>
+        <h2 class="project-title">Weather forecast</h2>
+      </div>
+      <div class="project-content">
+        <div class="weather-search">
+          <input type="text" class="input-field" id="cityInput" placeholder="Enter city name...">
+          <button class="search-btn" id="searchWeatherBtn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="weather-info" id="weatherInfo">
+          <div class="weather-loading" id="weatherLoading">
+            <div class="loading-spinner"></div>
+          </div>
+        </div>
+        <p class="weather-note">Note: This is a demo using simulated weather data</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Utility functions
+    const $ = id => document.getElementById(id);
+    const storage = {
+      save: (key, value) => localStorage.setItem(key, JSON.stringify(value)),
+      load: (key) => JSON.parse(localStorage.getItem(key)) || null
+    };
+
+    // Project 1: Color Picker
+    (function() {
+      const colorDisplay = $('colorDisplay');
+      const resetBtn = $('resetColorBtn');
+      const defaultColor = '#6c5ce7';
+      
+      const getRandomColor = () => {
+        const hue = Math.floor(Math.random() * 360);
+        return `hsl(${hue}, 80%, 60%)`;
+      };
+      
+      colorDisplay.addEventListener('click', () => {
+        colorDisplay.style.backgroundColor = getRandomColor();
+      });
+      
+      resetBtn.addEventListener('click', () => {
+        colorDisplay.style.backgroundColor = defaultColor;
+      });
+    })();
+
+    // Project 2: Star Rating
+    (function() {
+      const starsContainer = $('starsContainer');
+      const ratingValue = $('ratingValue');
+      const resetBtn = $('resetRatingBtn');
+      let currentRating = 0;
+      
+      starsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('star')) {
+          currentRating = parseInt(e.target.dataset.value);
+          updateStars();
+        }
+      });
+      
+      starsContainer.addEventListener('mouseover', (e) => {
+        if (e.target.classList.contains('star')) {
+          const hoverValue = parseInt(e.target.dataset.value);
+          highlightStars(hoverValue);
+        }
+      });
+      
+      starsContainer.addEventListener('mouseout', () => {
+        highlightStars(currentRating);
+      });
+      
+      function highlightStars(count) {
+        const stars = starsContainer.querySelectorAll('.star');
+        stars.forEach((star, index) => {
+          star.classList.toggle('active', index < count);
+        });
+      }
+      
+      function updateStars() {
+        highlightStars(currentRating);
+        ratingValue.textContent = currentRating;
+      }
+      
+      resetBtn.addEventListener('click', () => {
+        currentRating = 0;
+        updateStars();
+      });
+    })();
+
+    // Project 3: Circuit Switch
+    (function() {
+      const switchHandle = $('switchHandle');
+      const bulb = $('bulb');
+      const filament = $('filament');
+      const bulbGlow = $('bulbGlow');
+      const wirePath = $('wirePath');
+      let isOn = false;
+      
+      switchHandle.addEventListener('click', () => {
+        isOn = !isOn;
+        updateCircuit();
+      });
+      
+      function updateCircuit() {
+        if (isOn) {
+          switchHandle.setAttribute('transform', 'rotate(90,120,100)');
+          bulb.setAttribute('fill', '#fdcb6e');
+          filament.setAttribute('stroke-width', '2');
+          bulbGlow.setAttribute('opacity', '0.7');
+          wirePath.setAttribute('filter', 'url(#glowFilter)');
+        } else {
+          switchHandle.setAttribute('transform', 'rotate(0,120,100)');
+          bulb.setAttribute('fill', '#636e72');
+          filament.setAttribute('stroke-width', '0');
+          bulbGlow.setAttribute('opacity', '0');
+          wirePath.removeAttribute('filter');
+        }
+      }
+    })();
+
+    // Project 4: Calculator
+    (function() {
+      const display = $('calcDisplay');
+      const buttons = document.querySelectorAll('.calculator-buttons .calc-btn');
+      let currentInput = '0';
+      let calculation = '';
+      
+      function updateDisplay() {
+        display.textContent = currentInput;
+      }
+      
+      buttons.forEach(button => {
+        button.addEventListener('click', () => {
+          const value = button.dataset.value;
+          const action = button.dataset.action;
+          
+          if (value) {
+            handleInput(value);
+          } else if (action) {
+            handleAction(action);
+          }
+        });
+      });
+      
+      function handleInput(value) {
+        if (currentInput === '0' && value !== '.') {
+          currentInput = value;
+        } else {
+          currentInput += value;
+        }
+        updateDisplay();
+      }
+      
+      function handleAction(action) {
+        switch (action) {
+          case 'clear':
+            currentInput = '0';
+            calculation = '';
+            break;
+          case 'backspace':
+            if (currentInput.length > 1) {
+              currentInput = currentInput.slice(0, -1);
+            } else {
+              currentInput = '0';
+            }
+            break;
+          case 'calculate':
+            try {
+              calculation += currentInput;
+              currentInput = eval(calculation).toString();
+              calculation = '';
+            } catch {
+              currentInput = 'Error';
+            }
+            break;
+        }
+        updateDisplay();
+      }
+    })();
+
+    // Project 5: Type Detector
+    (function() {
+      const typeInput = $('typeInput');
+      const checkBtn = $('checkTypeBtn');
+      const result = $('typeResult');
+      
+      checkBtn.addEventListener('click', checkType);
+      typeInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkType();
+      });
+      
+      function checkType() {
+        const value = typeInput.value.trim();
+        if (!value) {
+          result.textContent = 'Please enter a value';
+          return;
+        }
+        
+        try {
+          const parsed = JSON.parse(value);
+          result.textContent = `Type: ${Array.isArray(parsed) ? 'Array' : typeof parsed}`;
+        } catch {
+          if (value === 'true' || value === 'false') {
+            result.textContent = 'Type: Boolean';
+          } else if (!isNaN(value)) {
+            result.textContent = 'Type: Number';
+          } else {
+            result.textContent = 'Type: String';
+          }
+        }
+      }
+    })();
+
+    // Project 6: Digital Clock
+    (function() {
+      const timeDisplay = $('clockTime');
+      const dateDisplay = $('clockDate');
+      const toggleBtn = $('toggleFormatBtn');
+      let is24Hour = true;
+      
+      function updateClock() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        
+        if (!is24Hour) {
+          const ampm = hours >= 12 ? 'PM' : 'AM';
+          hours = hours % 12 || 12;
+          timeDisplay.textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+        } else {
+          timeDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+        }
+        
+        const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+        dateDisplay.textContent = now.toLocaleDateString('en-US', options);
+      }
+      
+      toggleBtn.addEventListener('click', () => {
+        is24Hour = !is24Hour;
+        updateClock();
+      });
+      
+      updateClock();
+      setInterval(updateClock, 1000);
+    })();
+
+    // Project 7: Daily Journal
+    (function() {
+      const entryInput = $('journalEntry');
+      const saveBtn = $('saveJournalBtn');
+      const entriesContainer = $('journalEntries');
+      let entries = storage.load('journalEntries') || [];
+      
+      function renderEntries() {
+        entriesContainer.innerHTML = '';
+        
+        if (entries.length === 0) {
+          entriesContainer.innerHTML = '<div style="text-align: center; opacity: 0.7;">No entries yet</div>';
+          return;
+        }
+        
+        entries.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        entries.forEach(entry => {
+          const entryEl = document.createElement('div');
+          entryEl.className = 'entry-item';
+          entryEl.innerHTML = `
+            <div class="entry-date">${new Date(entry.date).toLocaleString()}</div>
+            <div class="entry-content">${entry.content}</div>
+          `;
+          entriesContainer.appendChild(entryEl);
+        });
+      }
+      
+      saveBtn.addEventListener('click', () => {
+        const content = entryInput.value.trim();
+        if (!content) return;
+        
+        entries.push({
+          date: new Date().toISOString(),
+          content
+        });
+        
+        storage.save('journalEntries', entries);
+        entryInput.value = '';
+        renderEntries();
+      });
+      
+      renderEntries();
+    })();
+
+    // Project 8: Notes App
+    (function() {
+      const titleInput = $('noteTitleInput');
+      const contentInput = $('noteContentInput');
+      const saveBtn = $('saveNoteBtn');
+      const notesContainer = $('notesList');
+      let notes = storage.load('notes') || [];
+      
+      function renderNotes() {
+        notesContainer.innerHTML = '';
+        
+        if (notes.length === 0) {
+          notesContainer.innerHTML = '<div style="text-align: center; opacity: 0.7;">No notes yet</div>';
+          return;
+        }
+        
+        notes.forEach((note, index) => {
+          const noteEl = document.createElement('div');
+          noteEl.className = 'entry-item';
+          noteEl.style.position = 'relative';
+          noteEl.innerHTML = `
+            <h4 class="note-title">${note.title}</h4>
+            <p class="entry-content">${note.content}</p>
+            <button class="delete-btn" data-index="${index}">
+              <i class="fas fa-times"></i>
+            </button>
+          `;
+          notesContainer.appendChild(noteEl);
+        });
+        
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const index = parseInt(e.currentTarget.dataset.index);
+            notes.splice(index, 1);
+            storage.save('notes', notes);
+            renderNotes();
+          });
+        });
+      }
+      
+      saveBtn.addEventListener('click', () => {
+        const title = titleInput.value.trim();
+        const content = contentInput.value.trim();
+        
+        if (!title || !content) return;
+        
+        notes.push({ title, content });
+        storage.save('notes', notes);
+        titleInput.value = '';
+        contentInput.value = '';
+        renderNotes();
+      });
+      
+      renderNotes();
+    })();
+
+    // Project 9: Quote Machine
+    (function() {
+      const quoteText = $('quoteText');
+      const quoteAuthor = $('quoteAuthor');
+      const newQuoteBtn = $('newQuoteBtn');
+      
+      const quotes = [
+        {
+          text: "The only way to do great work is to love what you do.",
+          author: "Steve Jobs"
+        },
+        {
+          text: "Life is what happens when you're busy making other plans.",
+          author: "John Lennon"
+        },
+        {
+          text: "In three words I can sum up everything I've learned about life: it goes on.",
+          author: "Robert Frost"
+        },
+        {
+          text: "The future belongs to those who believe in the beauty of their dreams.",
+          author: "Eleanor Roosevelt"
+        },
+        {
+          text: "Be yourself; everyone else is already taken.",
+          author: "Oscar Wilde"
+        }
+      ];
+      
+      function getRandomQuote() {
+        return quotes[Math.floor(Math.random() * quotes.length)];
+      }
+      
+      function displayQuote() {
+        const quote = getRandomQuote();
+        quoteText.textContent = quote.text;
+        quoteAuthor.textContent = `- ${quote.author}`;
+      }
+      
+      newQuoteBtn.addEventListener('click', displayQuote);
+      displayQuote();
+    })();
+
+    // Project 10: Password Checker
+    (function() {
+      const passwordInput = $('passwordInput');
+      const strengthBar = $('strengthBar');
+      const strengthText = $('strengthText');
+      
+      passwordInput.addEventListener('input', () => {
+        const password = passwordInput.value;
+        const strength = calculateStrength(password);
+        updateStrengthIndicator(strength);
+      });
+      
+      function calculateStrength(password) {
+        let strength = 0;
+        
+        // Length check
+        if (password.length >= 8) strength++;
+        if (password.length >= 12) strength++;
+        
+        // Character diversity
+        if (/[a-z]/.test(password)) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^a-zA-Z0-9]/.test(password)) strength++;
+        
+        return Math.min(strength, 5);
+      }
+      
+      function updateStrengthIndicator(strength) {
+        const percent = (strength / 5) * 100;
+        strengthBar.style.width = `${percent}%`;
+        
+        const colors = ['#e84393', '#e17055', '#fdcb6e', '#00b894', '#6c5ce7'];
+        const texts = ['Very Weak', 'Weak', 'Moderate', 'Strong', 'Very Strong'];
+        
+        strengthBar.style.backgroundColor = colors[strength - 1] || 'transparent';
+        strengthText.textContent = texts[strength - 1] || 'Enter a password';
+      }
+    })();
+
+    // Project 11: Todo List
+    (function() {
+      const todoInput = $('todoInput');
+      const addBtn = $('addTodoBtn');
+      const todosContainer = $('todosList');
+      const clearBtn = $('clearCompletedBtn');
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      let todos = storage.load('todos') || [];
+      let currentFilter = 'all';
+      
+      function renderTodos() {
+        todosContainer.innerHTML = '';
+        
+        const filteredTodos = todos.filter(todo => {
+          if (currentFilter === 'active') return !todo.completed;
+          if (currentFilter === 'completed') return todo.completed;
+          return true;
+        });
+        
+        if (filteredTodos.length === 0) {
+          todosContainer.innerHTML = '<div style="text-align: center; opacity: 0.7;">No tasks found</div>';
+        } else {
+          filteredTodos.forEach(todo => {
+            const todoEl = document.createElement('div');
+            todoEl.className = 'todo-item';
+            todoEl.innerHTML = `
+              <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} data-id="${todo.id}">
+              <span class="todo-text ${todo.completed ? 'completed' : ''}">${todo.text}</span>
+              <button class="delete-todo" data-id="${todo.id}"><i class="fas fa-times"></i></button>
+            `;
+            todosContainer.appendChild(todoEl);
+          });
+        }
+        
+        document.querySelectorAll('.todo-checkbox').forEach(checkbox => {
+          checkbox.addEventListener('change', (e) => {
+            const id = parseInt(e.target.dataset.id);
+            toggleTodoComplete(id);
+          });
+        });
+        
+        document.querySelectorAll('.delete-todo').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = parseInt(e.currentTarget.dataset.id);
+            deleteTodo(id);
+          });
+        });
+        
+        clearBtn.style.display = todos.some(todo => todo.completed) ? 'block' : 'none';
+      }
+      
+      function addTodo() {
+        const text = todoInput.value.trim();
+        if (!text) return;
+        
+        todos.push({
+          id: Date.now(),
+          text,
+          completed: false
+        });
+        
+        storage.save('todos', todos);
+        todoInput.value = '';
+        renderTodos();
+      }
+      
+      function toggleTodoComplete(id) {
+        todos = todos.map(todo => 
+          todo.id === id ? { ...todo, completed: !todo.completed } : todo
+        );
+        storage.save('todos', todos);
+        renderTodos();
+      }
+      
+      function deleteTodo(id) {
+        todos = todos.filter(todo => todo.id !== id);
+        storage.save('todos', todos);
+        renderTodos();
+      }
+      
+      function clearCompleted() {
+        todos = todos.filter(todo => !todo.completed);
+        storage.save('todos', todos);
+        renderTodos();
+      }
+      
+      addBtn.addEventListener('click', addTodo);
+      todoInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addTodo();
+      });
+      
+      clearBtn.addEventListener('click', clearCompleted);
+      
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.dataset.filter;
+          renderTodos();
+        });
+      });
+      
+      renderTodos();
+    })();
+
+    // Project 12: Weather App
+    (function() {
+      const cityInput = $('cityInput');
+      const searchBtn = $('searchWeatherBtn');
+      const weatherInfo = $('weatherInfo');
+      const loading = $('weatherLoading');
+      let tempUnit = 'celsius';
+      
+      function fetchWeather(city) {
+        loading.style.display = 'flex';
+        weatherInfo.innerHTML = '';
+        
+        // Simulate API call with timeout
+        setTimeout(() => {
+          loading.style.display = 'none';
+          
+          if (city.toLowerCase() === 'error') {
+            showError('City not found');
+            return;
+          }
+          
+          const weatherData = {
+            location: city,
+            temperature: Math.floor(Math.random() * 30) + 10,
+            condition: ['Sunny', 'Cloudy', 'Rainy', 'Thunderstorm'][Math.floor(Math.random() * 4)],
+            humidity: Math.floor(Math.random() * 50) + 30,
+            windSpeed: Math.floor(Math.random() * 20) + 5,
+            icon: ['fa-sun', 'fa-cloud', 'fa-cloud-rain', 'fa-bolt'][Math.floor(Math.random() * 4)]
+          };
+          
+          renderWeather(weatherData);
+        }, 800);
+      }
+      
+      function renderWeather(data) {
+        weatherInfo.innerHTML = `
+          <div class="weather-location">
+            <h3 class="location-name">${data.location}</h3>
+            <span class="unit-toggle" id="unitToggle">${tempUnit === 'celsius' ? '°C' : '°F'}</span>
+          </div>
+          
+          <div class="weather-main">
+            <i class="fas ${data.icon} weather-icon"></i>
+            <div>
+              <div class="weather-temp">${convertTemp(data.temperature)}${tempUnit === 'celsius' ? '°C' : '°F'}</div>
+              <div class="weather-condition">${data.condition}</div>
+            </div>
+          </div>
+          
+          <div class="weather-details">
+            <div class="weather-detail">
+              <i class="fas fa-tint detail-icon"></i>
+              <span>Humidity: ${data.humidity}%</span>
+            </div>
+            <div class="weather-detail">
+              <i class="fas fa-wind detail-icon"></i>
+              <span>Wind: ${data.windSpeed} km/h</span>
+            </div>
+          </div>
+        `;
+        
+        $('unitToggle').addEventListener('click', () => {
+          tempUnit = tempUnit === 'celsius' ? 'fahrenheit' : 'celsius';
+          renderWeather(data);
+        });
+      }
+      
+      function convertTemp(temp) {
+        return tempUnit === 'celsius' ? temp : Math.round((temp * 9/5) + 32);
+      }
+      
+      function showError(message) {
+        weatherInfo.innerHTML = `
+          <div class="weather-error">
+            ${message}. Please try another location.
+          </div>
+        `;
+      }
+      
+      searchBtn.addEventListener('click', () => {
+        const city = cityInput.value.trim();
+        if (city) fetchWeather(city);
+      });
+      
+      cityInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && cityInput.value.trim()) {
+          fetchWeather(cityInput.value.trim());
+        }
+      });
+      
+      // Load default weather
+      fetchWeather('New York');
+    })();
+
+    // Initialize all projects
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('All projects initialized!');
+    });
+  </script>
+</body>
+</html>
+<footer>
+    <p>©️ 2025 Vedansh Kaushik. All Rights Reserved.</p>
+    <p>Made with <i class="fas fa-heart" style="color: var(--accent);"></i></p>
+</footer>
